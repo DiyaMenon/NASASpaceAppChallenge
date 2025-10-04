@@ -1,361 +1,536 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sunny's Space Adventure ☀️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Fredoka', sans-serif;
-      background: #000814;
-      color: #fff;
-      height: 100vh;
-      overflow: hidden;
-      transition: background 1s ease;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunny's Space Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .stars {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(2px 2px at 20% 30%, white, transparent),
-                  radial-gradient(2px 2px at 60% 70%, white, transparent),
-                  radial-gradient(1px 1px at 50% 50%, white, transparent),
-                  radial-gradient(1px 1px at 80% 10%, white, transparent),
-                  radial-gradient(2px 2px at 90% 60%, white, transparent);
-      background-size: 200% 200%;
-      animation: stars-move 8s ease-in-out infinite;
-      opacity: 0.6;
-    }
+        body {
+            font-family: 'Fredoka', sans-serif;
+            overflow: hidden;
+            background: #000814;
+            color: #fff;
+            height: 100vh;
+        }
 
-    @keyframes stars-move {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-10px, -10px); }
-    }
+        /* Stars background */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(2px 2px at 20% 30%, white, transparent),
+                        radial-gradient(2px 2px at 60% 70%, white, transparent),
+                        radial-gradient(1px 1px at 50% 50%, white, transparent),
+                        radial-gradient(1px 1px at 80% 10%, white, transparent),
+                        radial-gradient(2px 2px at 90% 60%, white, transparent);
+            background-size: 200% 200%;
+            animation: stars-move 8s ease-in-out infinite;
+            opacity: 0.6;
+        }
 
-    .screen { display: none; opacity: 0; transition: opacity 0.6s ease; }
-    .screen.active { display: block; opacity: 1; }
+        @keyframes stars-move {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-10px, -10px); }
+        }
 
-    .game-screen {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      z-index: 5;
-    }
+        /* Main game container */
+        .game-screen {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
 
-    .character { font-size: 10rem; animation: float 3s ease-in-out infinite; margin-bottom: 2rem; }
-    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-30px);} }
+        /* Character display */
+        .character {
+            font-size: 12rem;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 40px currentColor);
+            margin-bottom: 2rem;
+        }
 
-    .story-box {
-      background: rgba(255,255,255,0.1);
-      border: 2px solid rgba(255,215,0,0.3);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
-      padding: 2rem 3rem;
-      max-width: 700px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.1); }
+        }
 
-    .story-text { font-size: 1.4rem; font-weight: 600; line-height: 1.6; margin-bottom: 1.5rem; }
+        /* Story text */
+        .story-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 2rem 3rem;
+            max-width: 600px;
+            text-align: center;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+        }
 
-    .choices { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; margin-top: 1rem; }
-    .choice-btn {
-      font-size: 1.2rem; font-weight: 600;
-      padding: 1rem 2rem; border: none;
-      border-radius: 20px; cursor: pointer;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white; transition: 0.3s; box-shadow: 0 10px 20px rgba(102,126,234,0.3);
-    }
-    .choice-btn:hover { transform: scale(1.05); }
-    .choice-btn.yellow { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-    .choice-btn.green { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .story-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
 
-    .title {
-      font-size: 4rem;
-      font-weight: 700;
-      background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 30px rgba(255,215,0,0.5);
-    }
-    .subtitle { font-size: 1.5rem; color: #7fffd4; margin-bottom: 2rem; }
+        /* Choice buttons */
+        .choices {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 700px;
+        }
 
-    .theme-option {
-      background: rgba(255,255,255,0.1);
-      border: 2px solid #fff;
-      padding: 1rem 2rem;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: transform 0.3s, background 0.3s;
-      font-size: 1.2rem;
-    }
-    .theme-option:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+        .choice-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* Aurora theme */
-    .theme-aurora { background: linear-gradient(180deg, #021b79 0%, #0575e6 100%); }
-    /* Solar Storm */
-    .theme-storm { background: radial-gradient(circle at top, #ff512f, #dd2476); }
-    /* Classic */
-    .theme-classic { background: #000814; }
+        .choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
 
-    /* API Data */
-    .data-box {
-      background: rgba(0,0,0,0.7);
-      padding: 2rem;
-      border-radius: 20px;
-      border: 2px solid #ffd700;
-      max-width: 700px;
-      font-size: 1.2rem;
-      line-height: 1.5;
-    }
+        .choice-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
 
-    /* Resources box */
-    .resources-box {
-      background: rgba(255,255,255,0.1);
-      padding: 2rem;
-      border-radius: 20px;
-      max-width: 800px;
-      text-align: left;
-      border: 2px solid #ffd700;
-    }
+        .choice-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
 
-    @media (max-width: 768px) {
-      .character { font-size: 7rem; }
-      .title { font-size: 2.5rem; }
-      .story-text { font-size: 1.1rem; }
-    }
-  </style>
+        .choice-btn.yellow {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        .choice-btn.green {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Special effects */
+        .explosion {
+            position: fixed;
+            font-size: 3rem;
+            pointer-events: none;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(3) rotate(360deg); opacity: 0; }
+        }
+
+        /* Screen transitions */
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Homepage specific */
+        .title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: rainbow 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes rainbow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(20deg); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #7fffd4;
+            margin-bottom: 3rem;
+        }
+
+        /* Score display */
+        .score {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: 2px solid #ffd700;
+        }
+
+        /* Mini game elements */
+        .clickable {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .clickable:hover {
+            transform: scale(1.2);
+        }
+
+        /* Aurora effect */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(127, 255, 212, 0.3),
+                rgba(106, 90, 205, 0.3),
+                rgba(255, 20, 147, 0.2),
+                transparent
+            );
+            animation: aurora-move 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes aurora-move {
+            0%, 100% { transform: translateY(0) skewX(0deg); opacity: 0.5; }
+            50% { transform: translateY(-50px) skewX(5deg); opacity: 0.8; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .character { font-size: 8rem; }
+            .title { font-size: 2.5rem; }
+            .story-text { font-size: 1.1rem; }
+            .choice-btn { font-size: 1.1rem; padding: 1rem 1.5rem; }
+        }
+    </style>
 </head>
 <body>
-  <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="score" id="score">⭐ Fun Points: <span id="points">0</span></div>
 
-  <!-- Theme Selection -->
-  <div class="screen active" id="themeSelect">
-    <div class="game-screen">
-      <h1 class="title">Sunny's Space Adventure ☀️</h1>
-      <p class="subtitle">Choose Your Cosmic Theme</p>
-      <div class="choices">
-        <div class="theme-option" onclick="selectTheme('classic')">🌌 Classic Space</div>
-        <div class="theme-option" onclick="selectTheme('aurora')">🌈 Aurora Glow</div>
-        <div class="theme-option" onclick="selectTheme('storm')">⚡ Solar Storm</div>
-      </div>
+    <!-- Home Screen -->
+    <div class="screen active" id="home">
+        <div class="game-screen">
+            <div class="character">☀️</div>
+            <h1 class="title">SUNNY'S ADVENTURE</h1>
+            <p class="subtitle">A Space Weather Story</p>
+            <div class="choices">
+                <button class="choice-btn" onclick="startGame()">🚀 START!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Home -->
-  <div class="screen" id="home">
-    <div class="game-screen">
-      <div class="character">☀️</div>
-      <h1 class="title">SUNNY’S ADVENTURE</h1>
-      <p class="subtitle">A Space Weather Story</p>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('scene1')">🚀 Start Journey</button>
-      </div>
+    <!-- Scene: Birth -->
+    <div class="screen" id="scene1">
+        <div class="game-screen">
+            <div class="character" id="sunnyChar">💥</div>
+            <div class="story-box">
+                <p class="story-text">You're born as SUNNY the solar flare! What do you want to do?</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="goTo('scene2a')">🚀 Zoom to Earth FAST!</button>
+                <button class="choice-btn yellow" onclick="goTo('scene2b')">🌌 Explore space slowly</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Scene 1 -->
-  <div class="screen" id="scene1">
-    <div class="game-screen">
-      <div class="character">💥</div>
-      <div class="story-box">
-        <p class="story-text">You are born as SUNNY, a Solar Flare from the Sun! What do you want to do?</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('scene2a')">🚀 Zoom to Earth!</button>
-        <button class="choice-btn yellow" onclick="goTo('scene2b')">🛸 Explore Space First</button>
-      </div>
+    <!-- Scene 2a: Fast path -->
+    <div class="screen" id="scene2a">
+        <div class="game-screen">
+            <div class="character">⚡</div>
+            <div class="story-box">
+                <p class="story-text">WHOOSH! You reach Earth in 8 minutes! Your energy is STRONG! Where do you go?</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="goTo('scene3a')">🛰️ Hit the satellites</button>
+                <button class="choice-btn green" onclick="goTo('scene3b')">🌍 Visit the North Pole</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Scene 2a -->
-  <div class="screen" id="scene2a">
-    <div class="game-screen">
-      <div class="character">⚡</div>
-      <div class="story-box">
-        <p class="story-text">WHOOSH! You reach Earth fast! Your power is strong. Where do you go?</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('scene3a')">🛰️ Hit Satellites</button>
-        <button class="choice-btn green" onclick="goTo('scene3b')">🌍 Visit the North Pole</button>
-      </div>
+    <!-- Scene 2b: Slow path -->
+    <div class="screen" id="scene2b">
+        <div class="game-screen">
+            <div class="character">🛸</div>
+            <div class="story-box">
+                <p class="story-text">You meet the International Space Station! The astronauts wave at you! 👋</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="createExplosion('💫'); addPoints(10); goTo('scene2b2')">💫 Wave back!</button>
+                <button class="choice-btn yellow" onclick="goTo('scene3c')">⚡ Power up their solar panels</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Scene 3a -->
-  <div class="screen" id="scene3a">
-    <div class="game-screen">
-      <div class="character">📡</div>
-      <div class="story-box">
-        <p class="story-text">OH NO! GPS goes wild! Farmers lose signals. Do you...</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('scene4a')">😅 Apologize & Learn</button>
-        <button class="choice-btn yellow" onclick="goTo('scene4b')">⚡ Keep Blasting!</button>
-      </div>
+    <div class="screen" id="scene2b2">
+        <div class="game-screen">
+            <div class="character">👋</div>
+            <div class="story-box">
+                <p class="story-text">They think you're friendly! But they also activate their radiation shields. Smart!</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="goTo('scene3b')">🌍 Continue to Earth</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Scene 3b -->
-  <div class="screen" id="scene3b">
-    <div class="game-screen">
-      <div class="character">🌈</div>
-      <div class="story-box">
-        <p class="story-text">You create Northern Lights! People cheer. What next?</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('goodEnd')">💫 Dance More!</button>
-        <button class="choice-btn yellow" onclick="goTo('dataScreen')">📊 See Real Data!</button>
-      </div>
+    <!-- Scene 3a: Satellite trouble -->
+    <div class="screen" id="scene3a">
+        <div class="game-screen">
+            <div class="character">📡</div>
+            <div class="story-box">
+                <p class="story-text">OH NO! GPS signals are going crazy! Farmers can't use their tractors! What now?</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="createExplosion('😅'); goTo('scene4a')">😅 Say sorry!</button>
+                <button class="choice-btn yellow" onclick="goTo('scene4b')">⚡ Keep going strong!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Scene 4a -->
-  <div class="screen" id="scene4a">
-    <div class="game-screen">
-      <div class="character">🤝</div>
-      <div class="story-box">
-        <p class="story-text">Scientists say: “It’s okay, Sunny! We study space weather to understand you.”</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('scienceEnd')">🔬 Help Scientists!</button>
-      </div>
+    <!-- Scene 3b: North Pole (Aurora) -->
+    <div class="screen" id="scene3b">
+        <div class="aurora"></div>
+        <div class="game-screen">
+            <div class="character">🌈</div>
+            <div class="story-box">
+                <p class="story-text">WOW! You create BEAUTIFUL Northern Lights! People are taking photos! 📸</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="createExplosion('✨'); addPoints(20); goTo('scene5good')">✨ Make it more colorful!</button>
+                <button class="choice-btn green" onclick="createExplosion('💚'); addPoints(15); goTo('scene5good')">💚 Dance in the sky!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Scene 4b -->
-  <div class="screen" id="scene4b">
-    <div class="game-screen">
-      <div class="character">🌩️</div>
-      <div class="story-box">
-        <p class="story-text">You cause radio blackouts and power problems! Engineers work fast!</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('badEnd')">😬 Oops...</button>
-      </div>
+    <!-- Scene 3c: Power boost -->
+    <div class="screen" id="scene3c">
+        <div class="game-screen">
+            <div class="character">⚡</div>
+            <div class="story-box">
+                <p class="story-text">The space station's solar panels LOVE your energy! But it's almost TOO much power!</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="addPoints(10); goTo('scene4c')">🔌 Reduce power carefully</button>
+                <button class="choice-btn yellow" onclick="goTo('scene4b')">💪 FULL POWER!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Good Ending -->
-  <div class="screen" id="goodEnd">
-    <div class="game-screen">
-      <div class="character">🌟</div>
-      <div class="story-box">
-        <p class="story-text">🎉 You brought beauty to Earth with your auroras!</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('dataScreen')">💡 Learn More</button>
-      </div>
+    <!-- Scene 4a: Apology path -->
+    <div class="screen" id="scene4a">
+        <div class="game-screen">
+            <div class="character">🤝</div>
+            <div class="story-box">
+                <p class="story-text">Scientists say: "It's okay! We study space weather to predict you!" Do you want to help?</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="addPoints(25); goTo('scene5science')">🔬 YES! Teach me!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Science Ending -->
-  <div class="screen" id="scienceEnd">
-    <div class="game-screen">
-      <div class="character">🔬</div>
-      <div class="story-box">
-        <p class="story-text">🌍 Scientists track solar flares to protect our technology. Great teamwork!</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('dataScreen')">📊 View Real Data</button>
-      </div>
+    <!-- Scene 4b: Chaos path -->
+    <div class="screen" id="scene4b">
+        <div class="game-screen">
+            <div class="character">🌩️</div>
+            <div class="story-box">
+                <p class="story-text">Your power causes radio blackouts and power grid problems! Engineers are scrambling!</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="goTo('scene5bad')">😬 Oops...</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Bad Ending -->
-  <div class="screen" id="badEnd">
-    <div class="game-screen">
-      <div class="character">😓</div>
-      <div class="story-box">
-        <p class="story-text">Too much energy caused chaos! Next time, balance power and care.</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('themeSelect')">🔄 Try Again</button>
-      </div>
+    <!-- Scene 4c: Balanced path -->
+    <div class="screen" id="scene4c">
+        <div class="game-screen">
+            <div class="character">⚖️</div>
+            <div class="story-box">
+                <p class="story-text">Perfect balance! You help without harm. The astronauts cheer! 🎉</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="addPoints(30); goTo('scene5perfect')">🌟 Continue to Earth!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Real Data Screen -->
-  <div class="screen" id="dataScreen">
-    <div class="game-screen">
-      <div class="data-box" id="dataBox">Loading latest NASA space weather data...</div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('resources')">📚 Resources</button>
-      </div>
+    <!-- Ending: Good -->
+    <div class="screen" id="scene5good">
+        <div class="aurora"></div>
+        <div class="game-screen">
+            <div class="character">🌟</div>
+            <div class="story-box">
+                <p class="story-text">🎉 YOU'RE A HERO! You brought beauty to Earth and people loved your light show!</p>
+                <p class="story-text" style="font-size: 1.1rem; color: #7fffd4;">Space weather can be beautiful when we understand it! 💙</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="restart()">🔄 Play Again!</button>
+                <button class="choice-btn yellow" onclick="showFacts()">💡 Learn More!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Resources Screen -->
-  <div class="screen" id="resources">
-    <div class="game-screen">
-      <div class="resources-box">
-        <h2>🌐 Data, Tools, and Resources</h2>
-        <p><strong>APIs & Data:</strong></p>
-        <ul>
-          <li>NASA DONKI (Space Weather Database)</li>
-          <li>NASA POWER Solar & Meteorological Data</li>
-          <li>NOAA SWPC Space Weather Forecasts</li>
-          <li>ESA & JAXA research on solar activity</li>
-          <li>ISRO Space Weather Monitoring</li>
-        </ul>
-        <p><strong>Partners:</strong> NASA, ESA, ISRO, CSA, JAXA, MBRSC (UAE), UK Space Agency, South African National Space Agency, Argentinian & Brazilian Space Agencies, Turkish Space Agency, Spanish Space Agency.</p>
-        <p><strong>Credits:</strong> Font (Fredoka), Icons (Emoji / Open Source), Story concept & code by your team for NASA Space Apps Challenge 2025.</p>
-      </div>
-      <div class="choices">
-        <button class="choice-btn" onclick="goTo('themeSelect')">🏠 Back to Start</button>
-      </div>
+    <!-- Ending: Science -->
+    <div class="screen" id="scene5science">
+        <div class="game-screen">
+            <div class="character">🔬</div>
+            <div class="story-box">
+                <p class="story-text">🎓 SMART CHOICE! Scientists track solar flares to protect technology. You're helping them learn!</p>
+                <p class="story-text" style="font-size: 1.1rem; color: #7fffd4;">Space weather forecasting saves lives! 🛡️</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="restart()">🔄 Play Again!</button>
+                <button class="choice-btn yellow" onclick="showFacts()">💡 Learn More!</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // Scene management
-    function goTo(id) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
+    <!-- Ending: Perfect -->
+    <div class="screen" id="scene5perfect">
+        <div class="aurora"></div>
+        <div class="game-screen">
+            <div class="character">🏆</div>
+            <div class="story-box">
+                <p class="story-text">🌟 PERFECT ENDING! You found the balance between power and care!</p>
+                <p class="story-text" style="font-size: 1.1rem; color: #ffd700;">Solar flares can be amazing when we prepare for them! ✨</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="restart()">🔄 Play Again!</button>
+                <button class="choice-btn green" onclick="showFacts()">💡 Learn More!</button>
+            </div>
+        </div>
+    </div>
 
-    function selectTheme(theme) {
-      document.body.className = '';
-      document.body.classList.add(`theme-${theme}`);
-      goTo('home');
-    }
+    <!-- Ending: Bad -->
+    <div class="screen" id="scene5bad">
+        <div class="game-screen">
+            <div class="character">😓</div>
+            <div class="story-box">
+                <p class="story-text">😬 Too much power caused problems! But it's okay - scientists learn from every solar storm!</p>
+                <p class="story-text" style="font-size: 1.1rem; color: #ff6b6b;">Next time, remember: power needs balance! ⚖️</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="restart()">🔄 Try Again!</button>
+                <button class="choice-btn yellow" onclick="showFacts()">💡 Learn More!</button>
+            </div>
+        </div>
+    </div>
 
-    // Fetch NASA DONKI API data
-    async function fetchNASAData() {
-      const box = document.getElementById('dataBox');
-      try {
-        const res = await fetch('https://api.nasa.gov/DONKI/FLR?api_key=DEMO_KEY');
-        const data = await res.json();
-        if (data.length > 0) {
-          const flare = data[0];
-          box.innerHTML = `
-            ☀️ <strong>Latest Solar Flare</strong><br>
-            Class: ${flare.classType || 'N/A'}<br>
-            Start Time: ${flare.beginTime}<br>
-            Source Region: ${flare.sourceLocation || 'Unknown'}<br><br>
-            NASA monitors solar activity through the DONKI database.`;
-        } else {
-          box.textContent = "No recent solar flares detected.";
+    <!-- Fun Facts Screen -->
+    <div class="screen" id="facts">
+        <div class="game-screen">
+            <div class="story-box" style="max-width: 700px;">
+                <h2 style="color: #ffd700; margin-bottom: 1rem;">🌟 Space Weather Facts!</h2>
+                <p class="story-text" style="font-size: 1.1rem; text-align: left;">
+                    ☀️ Solar flares travel at the speed of light!<br><br>
+                    🛰️ Scientists use satellites to predict space weather<br><br>
+                    🌈 Auroras happen when solar particles hit Earth's atmosphere<br><br>
+                    👩‍🚀 Astronauts take shelter during big solar storms<br><br>
+                    📡 GPS and radios can be affected by space weather
+                </p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="restart()">🔄 Play Again!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let points = 0;
+
+        function startGame() {
+            points = 0;
+            updateScore();
+            goTo('scene1');
         }
-      } catch (err) {
-        box.textContent = "Could not load NASA data.";
-        console.error(err);
-      }
-    }
 
-    // Auto-fetch when data screen is opened
-    const observer = new MutationObserver(() => {
-      const screen = document.getElementById('dataScreen');
-      if (screen.classList.contains('active')) fetchNASAData();
-    });
-    observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
-  </script>
+        function goTo(sceneId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(s => s.classList.remove('active'));
+            
+            setTimeout(() => {
+                document.getElementById(sceneId).classList.add('active');
+            }, 300);
+        }
+
+        function addPoints(amount) {
+            points += amount;
+            updateScore();
+        }
+
+        function updateScore() {
+            document.getElementById('points').textContent = points;
+        }
+
+        function createExplosion(emoji) {
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.textContent = emoji;
+            explosion.style.left = Math.random() * window.innerWidth + 'px';
+            explosion.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(explosion);
+            
+            setTimeout(() => explosion.remove(), 1000);
+        }
+
+        function showFacts() {
+            goTo('facts');
+        }
+
+        function restart() {
+            points = 0;
+            updateScore();
+            goTo('home');
+        }
+
+        // Add random sparkles
+        setInterval(() => {
+            createExplosion(['✨', '⭐', '💫', '🌟'][Math.floor(Math.random() * 4)]);
+        }, 2000);
+    </script>
 </body>
 </html>

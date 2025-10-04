@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey to the Stars - A Space Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', cursive;
+            background: #0a0e27;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-radius: 25px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ffeb3b;
+            text-shadow: 0 0 20px rgba(255, 235, 59, 0.5);
+            margin-bottom: 30px;
+        }
+
+        .scene {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .highlight {
+            color: #ffeb3b;
+            font-weight: bold;
+        }
+
+        .fact-box {
+            background: rgba(33, 150, 243, 0.2);
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .emoji-large {
+            font-size: 8em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .sun-animation {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #ffeb3b, #ff9800);
+            border-radius: 50%;
+            box-shadow: 0 0 80px #ffeb3b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .planet-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .planet {
+            text-align: center;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .planet:nth-child(2) { animation-delay: 0.5s; }
+        .planet:nth-child(3) { animation-delay: 1s; }
+        .planet:nth-child(4) { animation-delay: 1.5s; }
+
+        .progress {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .rocket {
+            animation: rocketLaunch 2s ease-in-out infinite;
+        }
+
+        @keyframes rocketLaunch {
+            0%, 100% { transform: translateY(0) rotate(-45deg); }
+            50% { transform: translateY(-30px) rotate(-45deg); }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .content { font-size: 1.1em; }
+            .emoji-large { font-size: 5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <!-- Page 1: Introduction -->
+        <div class="page active" id="page1">
+            <h1>🚀 Journey to the Stars 🌟</h1>
+            <div class="scene">
+                <div class="emoji-large rocket">🚀</div>
+            </div>
+            <div class="content">
+                <p>Welcome, young explorer! Are you ready for an amazing adventure through space?</p>
+                <p>Join us as we learn about our incredible universe, from Earth to distant galaxies!</p>
+                <p class="highlight">Let's blast off and discover the wonders of space! 🌌</p>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" disabled>← Back</button>
+                <button class="btn" onclick="nextPage()">Start Adventure →</button>
+            </div>
+            <div class="progress">Page 1 of 10</div>
+        </div>
+
+        <!-- Page 2: Our Home - Earth -->
+        <div class="page" id="page2">
+            <h1>🌍 Our Beautiful Home - Earth</h1>
+            <div class="scene">
+                <div class="emoji-large">🌍</div>
+            </div>
+            <div class="content">
+                <p>We live on planet Earth, the only place in the universe where we know life exists!</p>
+                <p>Earth is the <span class="highlight">third planet</span> from the Sun and has everything we need: water, air, and the perfect temperature.</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> Earth is about 4.5 billion years old! It's covered 71% by water, which is why astronauts call it "The Blue Planet" when they see it from space.
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 2 of 10</div>
+        </div>
+
+        <!-- Page 3: The Moon -->
+        <div class="page" id="page3">
+            <h1>🌙 Earth's Companion - The Moon</h1>
+            <div class="scene">
+                <div class="emoji-large">🌙</div>
+            </div>
+            <div class="content">
+                <p>Look up at night! That's our Moon, Earth's natural satellite.</p>
+                <p>The Moon orbits around Earth and takes about <span class="highlight">27 days</span> to complete one trip around our planet.</p>
+                <p>On July 20, 1969, humans landed on the Moon for the first time! 👨‍🚀</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> The Moon is slowly moving away from Earth at about 3.8 cm per year. Also, there's no wind or weather on the Moon, so the footprints left by astronauts are still there!
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 3 of 10</div>
+        </div>
+
+        <!-- Page 4: The Sun -->
+        <div class="page" id="page4">
+            <h1>☀️ The Sun - Our Star</h1>
+            <div class="scene">
+                <div class="sun-animation"></div>
+            </div>
+            <div class="content">
+                <p>The Sun is a <span class="highlight">giant ball of hot gas</span> that gives us light and warmth!</p>
+                <p>It's so big that you could fit <span class="highlight">1.3 million Earths</span> inside it!</p>
+                <p>Without the Sun, there would be no life on Earth. It's the center of our Solar System.</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> The Sun is about 93 million miles (150 million km) away from Earth. Its light takes 8 minutes to reach us! The Sun is also about 4.6 billion years old.
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 4 of 10</div>
+        </div>
+
+        <!-- Page 5: The Planets -->
+        <div class="page" id="page5">
+            <h1>🪐 The Solar System Family</h1>
+            <div class="scene">
+                <div class="planet-row">
+                    <div class="planet">
+                        <div style="font-size: 3em;">☿️</div>
+                        <div>Mercury</div>
+                    </div>
+                    <div class="planet">
+                        <div style="font-size: 3em;">♀️</div>
+                        <div>Venus</div>
+                    </div>
+                    <div class="planet">
+                        <div style="font-size: 3em;">🌍</div>
+                        <div>Earth</div>
+                    </div>
+                    <div class="planet">
+                        <div style="font-size: 3em;">♂️</div>
+                        <div>Mars</div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <p>Our Solar System has <span class="highlight">8 planets</span> that orbit the Sun!</p>
+                <p>The closest four are rocky planets: Mercury, Venus, Earth, and Mars.</p>
+                <p>The outer four are gas giants: Jupiter, Saturn, Uranus, and Neptune.</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> Jupiter is the biggest planet - it's so large that all the other planets could fit inside it! Saturn has beautiful rings made of ice and rock.
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 5 of 10</div>
+        </div>
+
+        <!-- Page 6: Mars - The Red Planet -->
+        <div class="page" id="page6">
+            <h1>🔴 Mars - The Red Planet</h1>
+            <div class="scene">
+                <div class="emoji-large">🔴</div>
+            </div>
+            <div class="content">
+                <p>Mars is our neighboring planet and it looks red because of rusty iron in its soil!</p>
+                <p>Scientists are exploring Mars with robots called <span class="highlight">rovers</span> to see if life ever existed there.</p>
+                <p>One day, humans might visit Mars and even live there! 🚀</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> Mars has the largest volcano in our Solar System called Olympus Mons - it's 3 times taller than Mount Everest! Mars also has two tiny moons named Phobos and Deimos.
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 6 of 10</div>
+        </div>
+
+        <!-- Page 7: The International Space Station -->
+        <div class="page" id="page7">
+            <h1>🛰️ The International Space Station</h1>
+            <div class="scene">
+                <div class="emoji-large">🛰️</div>
+            </div>
+            <div class="content">
+                <p>High above Earth, there's a <span class="highlight">space laboratory</span> where astronauts live and work!</p>
+                <p>The ISS orbits Earth every 90 minutes at a speed of 28,000 km/h (17,500 mph).</p>
+                <p>Astronauts from different countries work together to study space and Earth! 🌍</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> Astronauts on the ISS see 16 sunrises and sunsets every day! They float in zero gravity and do science experiments that help us learn more about space.
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 7 of 10</div>
+        </div>
+
+        <!-- Page 8: Stars and Galaxies -->
+        <div class="page" id="page8">
+            <h1>⭐ Stars and Galaxies</h1>
+            <div class="scene">
+                <div style="font-size: 4em;">✨ 🌟 ⭐ 💫 ✨</div>
+            </div>
+            <div class="content">
+                <p>When you look at the night sky, you see thousands of stars!</p>
+                <p>Each star is like our Sun - a giant ball of burning gas. Some are bigger, some are smaller.</p>
+                <p>Stars group together in huge collections called <span class="highlight">galaxies</span>. Our galaxy is called the Milky Way! 🌌</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> There are about 100-400 billion stars in the Milky Way galaxy! And there are billions of galaxies in the universe. The nearest star to our Sun is 4.2 light-years away!
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 8 of 10</div>
+        </div>
+
+        <!-- Page 9: Black Holes -->
+        <div class="page" id="page9">
+            <h1>⚫ Mysterious Black Holes</h1>
+            <div class="scene">
+                <div class="emoji-large">⚫</div>
+            </div>
+            <div class="content">
+                <p>Black holes are the most mysterious objects in space!</p>
+                <p>They have such strong <span class="highlight">gravity</span> that nothing can escape - not even light!</p>
+                <p>Black holes form when very massive stars die and collapse. They're like cosmic vacuum cleaners! 🌀</p>
+            </div>
+            <div class="fact-box">
+                <strong>🔬 Amazing Fact:</strong> If you fell into a black hole, time would seem to slow down for you! Scientists took the first photo of a black hole in 2019 - it was in a galaxy 55 million light-years away!
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="nextPage()">Next →</button>
+            </div>
+            <div class="progress">Page 9 of 10</div>
+        </div>
+
+        <!-- Page 10: Future of Space Exploration -->
+        <div class="page" id="page10">
+            <h1>🚀 You Can Be a Space Explorer!</h1>
+            <div class="scene">
+                <div style="font-size: 4em;">👨‍🚀 🚀 🌟 👩‍🚀</div>
+            </div>
+            <div class="content">
+                <p>The universe is full of mysteries waiting to be discovered!</p>
+                <p>Maybe <span class="highlight">YOU</span> will be the scientist who discovers life on another planet, or the astronaut who walks on Mars!</p>
+                <p>Keep learning, stay curious, and reach for the stars! ✨</p>
+            </div>
+            <div class="fact-box">
+                <strong>💡 Remember:</strong> Every great space explorer started just like you - by looking up at the stars and asking questions. Study science, math, and never stop wondering about our amazing universe!
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevPage()">← Back</button>
+                <button class="btn" onclick="restart()">Start Again 🔄</button>
+            </div>
+            <div class="progress">Page 10 of 10 - The End! 🎉</div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 10;
+
+        // Create stars background
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        function showPage(pageNum) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById('page' + pageNum).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        function restart() {
+            currentPage = 1;
+            showPage(currentPage);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === 'ArrowLeft') prevPage();
+        });
+    </script>
+</body>
+</html>

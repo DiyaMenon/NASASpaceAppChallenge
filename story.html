@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sunny’s Solar Adventure</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background: linear-gradient(to bottom, #1a1a40, #000);
+  color: white;
+  overflow-x: hidden;
+  text-align: center;
+}
+.page {
+  display: none;
+  padding: 40px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+}
+.active { display: block; animation: fadeIn 1s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+h1 { font-size: 2.5em; margin-bottom: 20px; color: #ffcc00; }
+p { font-size: 1.2em; line-height: 1.8; text-align: justify; margin-bottom: 20px; }
+
+.illustration { margin: 20px auto; font-size: 3em; }
+.icon {
+  display: inline-block;
+  margin: 20px;
+  cursor: pointer;
+  font-size: 5em;
+  transition: transform 0.3s;
+}
+.icon:hover { transform: scale(1.3) rotate(5deg); }
+
+.btn {
+  background: #ffcc00;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  border-radius: 25px;
+  margin: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.btn:hover { background: #ffaa00; }
+
+.info-box {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 700px;
+  text-align: left;
+  font-size: 1.1em;
+}
+
+/* Animations */
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes wave { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes driftDown { 0% { transform: translateY(0); } 100% { transform: translateY(15px); } }
+@keyframes flashRed { 0%,100% { background-color: rgba(255,0,0,0.2); } 50% { background-color: rgba(255,0,0,0.7); } }
+
+.sun { animation: pulse 3s infinite; }
+.earth { display:inline-block; animation: spin 20s linear infinite; }
+.aurora { display:inline-block; animation: wave 4s ease-in-out infinite; }
+.astronaut { display:inline-block; animation: wave 1.5s ease-in-out infinite; }
+.satellite { display:inline-block; animation: driftDown 8s ease-in-out infinite alternate; }
+.xflare { animation: flashRed 1s infinite; }
+
+</style>
+</head>
+<body>
+
+<!-- Home Page -->
+<div class="page active" id="page1">
+<h1>☀️ Sunny’s Solar Adventure 🚀</h1>
+<p>Welcome! Click an icon below to explore the exciting stories of the Sun, space phenomena, and how they impact life on Earth and beyond. Each story includes fascinating NASA data and interactive animations!</p>
+<div class="illustration">
+  <div class="icon sun" onclick="goToPage(2)" title="Learn about the Sun">🌞</div>
+  <div class="icon earth" onclick="goToPage(3)" title="See what CMEs do">🌍</div>
+  <div class="icon astronaut" onclick="goToPage(4)" title="Meet the astronaut">👩‍🚀</div>
+  <div class="icon satellite" onclick="goToPage(5)" title="Discover technology risks">📡</div>
+  <div class="icon aurora" onclick="goToPage(6)" title="See magical auroras">🌌</div>
+</div>
+</div>
+
+<!-- Page 2: Sun -->
+<div class="page" id="page2">
+<h1><span class="sun">🌞</span> Sunny the Sun</h1>
+<p>Meet Sunny, the star at the center of our solar system. I give life and warmth, but sometimes I have powerful outbursts called solar flares. These are massive explosions of energy, sending streams of radiation across space, reaching Earth in minutes!</p>
+<p>NASA observes these flares constantly using satellites such as the Solar Dynamics Observatory (SDO). Their data help protect astronauts, satellites, and power grids. Flares can affect radio communications, GPS signals, and even our power systems, showing how connected we are to our fiery Sun.</p>
+<div class="info-box"><strong>Fact:</strong> Solar flares are the largest explosions in our solar system, sometimes releasing energy equivalent to billions of nuclear bombs.</div>
+<div class="info-box"><strong>NASA Insight:</strong> Predicting solar activity allows us to protect technology and human life both on Earth and in space.</div>
+<button class="btn" onclick="goToPage(1)">🏠 Back to Home</button>
+</div>
+
+<!-- Page 3: CME -->
+<div class="page" id="page3">
+<h1><span class="earth">🌍</span> Coronal Mass Ejection</h1>
+<p>CMEs are huge clouds of charged solar particles hurled into space. Imagine the Sun sneezing a billion-ton cloud toward Earth! When these clouds hit our planet, they can disrupt satellites, GPS systems, and even power grids.</p>
+<p>Farmer Finn experienced a CME that interfered with his GPS-guided tractor, Auto. What should have been perfectly straight corn rows became crooked, forcing Finn to intervene manually. NASA tracks CMEs to issue warnings and protect critical systems on Earth.</p>
+<div class="info-box"><strong>Fact:</strong> CMEs can travel over 1 million miles per hour, arriving at Earth in 1–3 days.</div>
+<div class="info-box"><strong>NASA Insight:</strong> Space weather forecasts allow operators of satellites, aviation systems, and farmers using GPS to prepare and mitigate risks.</div>
+<button class="btn" onclick="goToPage(1)">🏠 Back to Home</button>
+</div>
+
+<!-- Page 4: Astronaut -->
+<div class="page" id="page4">
+<h1><span class="astronaut">👩‍🚀</span> Astronaut in Space</h1>
+<p>Being outside Earth's protective magnetic shield can be risky during solar storms. Astronauts aboard the ISS monitor radiation levels constantly. In the event of an X-class flare, they quickly move to shielded areas inside the spacecraft.</p>
+<p>Rookie Astronaut Alex experienced such a flare. NASA’s space weather data allowed Mission Control to issue a clear, actionable alert: "RED ALERT! RACE TO THE SHIELDED SAFE ZONE NOW!" Alex safely reached the shielded compartment, illustrating how critical timely information is in space.</p>
+<div class="info-box"><strong>Tip:</strong> Astronauts hide in storm shelters during flares to minimize radiation exposure.</div>
+<div class="info-box"><strong>NASA Insight:</strong> Radiation monitoring protects astronauts during missions beyond low Earth orbit.</div>
+<button class="btn" onclick="goToPage(1)">🏠 Back to Home</button>
+</div>
+
+<!-- Page 5: Technology -->
+<div class="page" id="page5">
+<h1><span class="satellite">📡</span> Technology at Risk</h1>
+<p>Solar storms don’t just affect space; they impact Earth’s technology too. High-energy particles can disrupt satellites, GPS navigation, aviation communications, and even power grids. In 1989, a geomagnetic storm caused a blackout in Quebec lasting 9 hours.</p>
+<p>NASA monitors these events using multiple spacecraft, providing advance warnings to operators worldwide. This allows preventive actions like placing satellites in safe mode or rerouting flights to avoid high-radiation areas.</p>
+<div class="info-box"><strong>Example:</strong> Geomagnetically Induced Currents (GICs) can heat transformers and damage power infrastructure.</div>
+<div class="info-box"><strong>NASA Insight:</strong> Space weather alerts enable global technology protection, saving billions in potential damages.</div>
+<button class="btn" onclick="goToPage(1)">🏠 Back to Home</button>
+</div>
+
+<!-- Page 6: Aurora -->
+<div class="page" id="page6">
+<h1><span class="aurora">🌌</span> Magical Auroras</h1>
+<p>When charged solar particles collide with Earth’s magnetic field and atmosphere, they create auroras—glowing lights visible near the poles. The Northern and Southern Lights are natural displays of space weather’s beauty.</p>
+<p>Astronauts aboard the ISS witness auroras as luminous ribbons encircling Earth. NASA studies these phenomena to understand how solar energy interacts with our planet’s atmosphere, revealing not just stunning visuals, but critical data for space weather prediction.</p>
+<div class="info-box"><strong>Fact:</strong> Auroras occur when charged particles excite atmospheric gases, creating green, red, and purple lights.</div>
+<div class="info-box"><strong>NASA Insight:</strong> Studying auroras helps predict solar storm impacts on satellites and communications.</div>
+<button class="btn" onclick="goToPage(1)">🏠 Back to Home</button>
+</div>
+
+<script>
+function goToPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page' + n).classList.add('active');
+}
+</script>
+
+</body>
+</html>
