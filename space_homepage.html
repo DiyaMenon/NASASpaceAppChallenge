@@ -209,14 +209,14 @@
 
     /* === Astronaut === */
     .astronaut {
-      position: fixed; bottom: 30px; left: 20px;
+      position: fixed; bottom: -10px; left: 20px;
       font-size: 2.8em; animation: floaty 6s ease-in-out infinite;
       cursor: pointer; z-index: 5;
     }
     @keyframes floaty { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
 
     .speech-bubble {
-      position: fixed; bottom: 100px; left: 90px;
+      position: fixed; bottom: -1px; left: 90px;
       background: rgba(255,255,255,0.15);
       padding: 10px 18px; border-radius: 15px;
       backdrop-filter: blur(10px); font-size: 1em;
@@ -225,7 +225,7 @@
     }
 
     .speech-bubble::before {
-      content: ""; position: absolute; bottom: -10px; left: 25px;
+      content: ""; position: fixed; bottom: 100px; left: 20px;
       width: 0; height: 0;
       border-left: 10px solid transparent; border-right: 10px solid transparent;
       border-top: 10px solid rgba(255,255,255,0.15);
