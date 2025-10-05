@@ -1,4 +1,4 @@
-# 🌌 NASA Space App Challenge — Interactive Web Experience
+# 🌌 NASA Space App Challenge — Space Adventures
 
 ## 🎯 Overview  
 This project is a **web-based interactive educational platform** designed to inspire curiosity about **space science and Earth systems** through storytelling, data, and gameplay.  
